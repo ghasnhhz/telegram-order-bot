@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Secrets — never commit
+.env
+
+# Runtime data (orders are generated at runtime)
+data/orders.json
+
+# Logs / OS noise
+*.log
+.DS_Store
