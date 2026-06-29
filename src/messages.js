@@ -19,6 +19,7 @@ export const messages = {
   // --- Buttons (labels) ---
   btn: {
     catalog: "🛍 Katalogni ko'rish",
+    details: "Batafsil ▶",
     order: "🛒 Buyurtma berish",
     confirm: "✅ Tasdiqlash",
     cancel: "❌ Bekor qilish",
@@ -32,6 +33,17 @@ export const messages = {
   chooseCategory: "Kategoriyani tanlang:",
   chooseItem: (category) => `*${category}* — mahsulotni tanlang:`,
   emptyCatalog: "Hozircha katalog bo'sh. Tez orada to'ldiriladi.",
+
+  // Item card (one per item in the category list): name + price.
+  itemCard: ({ name, price, currency }) =>
+    `*${name}*\n💰 ${formatPrice(price, currency)}`,
+
+  // Item detail screen: name, description, price.
+  itemDetail: ({ name, description, price, currency }) =>
+    `*${name}*\n\n${description}\n\n💰 ${formatPrice(price, currency)}`,
+
+  // Shown when a Phase-4 step (size/order) is tapped before that flow exists.
+  orderComingSoon: "Buyurtma berish keyingi bosqichda ishga tushadi. 🛠",
 
   // --- Item detail / order steps ---
   chooseSize: "Hajmni tanlang:",
