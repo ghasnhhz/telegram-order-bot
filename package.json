@@ -1,0 +1,16 @@
+{
+  "name": "telegram-order-bot",
+  "version": "0.1.0",
+  "description": "Demo Telegram order bot for children's clothing shops (sales asset, config-driven, rebrandable).",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node --env-file=.env src/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "grammy": "^1.30.0"
+  }
+}
