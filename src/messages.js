@@ -21,6 +21,7 @@ export const messages = {
     catalog: "🛍 Katalogni ko'rish",
     details: "Batafsil ▶",
     order: "🛒 Buyurtma berish",
+    next: "Davom etish ▶",
     confirm: "✅ Tasdiqlash",
     cancel: "❌ Bekor qilish",
     back: "⬅️ Orqaga",
@@ -42,9 +43,6 @@ export const messages = {
   itemDetail: ({ name, description, price, currency }) =>
     `*${name}*\n\n${description}\n\n💰 ${formatPrice(price, currency)}`,
 
-  // Shown when a Phase-4 step (size/order) is tapped before that flow exists.
-  orderComingSoon: "Buyurtma berish keyingi bosqichda ishga tushadi. 🛠",
-
   // --- Item detail / order steps ---
   chooseSize: "Hajmni tanlang:",
   chooseQty: (qty) => `Sonini tanlang: *${qty}*\n(➖ / ➕ tugmalari yoki raqam yozing)`,
@@ -54,8 +52,12 @@ export const messages = {
     "Pastdagi tugma orqali ulashing yoki qo'lda yozing (masalan: +998 90 123 45 67).",
   invalidPhone:
     "Bu telefon raqamga o'xshamadi. Iltimos, to'g'ri raqam yuboring (masalan: +998 90 123 45 67).",
+  phoneSaved: "Raqamingiz qabul qilindi. ✅",
   chooseCity: "Yetkazib berish shahrini tanlang:",
   askAddress: "Yetkazib berish manzilini yozing (ko'cha, uy, mo'ljal):",
+
+  // Nudge when a button-only step (size / city) gets stray typed text.
+  useButtons: "Iltimos, yuqoridagi tugmalardan birini tanlang.",
 
   // --- Confirmation ---
   confirmTitle: "Buyurtmangizni tasdiqlang:",

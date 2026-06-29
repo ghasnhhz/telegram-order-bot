@@ -12,6 +12,7 @@ import {
   isEmpty,
   resolvePhoto,
 } from "./catalog.js";
+import { orderFlow } from "./order.js";
 
 // ---- Session shape -----------------------------------------------------------
 // One in-memory session per chat. `step` drives the order state machine
@@ -107,10 +108,11 @@ bot.callbackQuery(/^item:(.+)$/, async (ctx) => {
   await sendItemCard(ctx, item, messages.itemDetail(item), keyboard);
 });
 
-// Phase-3 placeholder: size/order taps don't error; the real flow lands in Phase 4.
-bot.callbackQuery(/^(size|order):/, async (ctx) => {
-  await ctx.answerCallbackQuery({ text: messages.orderComingSoon });
-});
+// ---- Order flow (Phase 4) ----------------------------------------------------
+// Handles size → quantity → name → phone → city → address. Registered before the
+// generic text fallback so mid-flow input reaches the flow; non-flow text falls
+// through (the composer calls next() when no order step is active).
+bot.use(orderFlow);
 
 // Gentle fallback for anything unrecognized (refined in Phase 6).
 bot.on("message:text", async (ctx) => {
