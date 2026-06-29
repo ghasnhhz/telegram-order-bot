@@ -1,0 +1,42 @@
+[
+  {
+    "id": "tufli-qizil-01",
+    "category": "Tufli",
+    "name": "Qizlar bezakli tuflisi",
+    "description": "Qulay va chiroyli, kundalik kiyim uchun. Yumshoq ichki qism.",
+    "price": 115000,
+    "currency": "so'm",
+    "sizes": ["22", "23", "24", "25", "26"],
+    "photo": "assets/tufli-qizil.jpg"
+  },
+  {
+    "id": "krossovka-bolalar-01",
+    "category": "Tufli",
+    "name": "Bolalar krossovkasi",
+    "description": "Yengil va mustahkam, kundalik yurish uchun qulay.",
+    "price": 130000,
+    "currency": "so'm",
+    "sizes": ["27", "28", "29", "30", "31"],
+    "photo": "assets/krossovka-bolalar.jpg"
+  },
+  {
+    "id": "koylak-kuzgi-01",
+    "category": "Ko'ylak",
+    "name": "Kuzgi ko'ylak",
+    "description": "Iliq paxtali mato, kuz mavsumi uchun ideal.",
+    "price": 95000,
+    "currency": "so'm",
+    "sizes": ["S", "M", "L"],
+    "photo": "assets/koylak-kuzgi.jpg"
+  },
+  {
+    "id": "kurtka-qishki-01",
+    "category": "Kurtka",
+    "name": "Qishki kurtka",
+    "description": "Issiq va shamoldan himoya qiluvchi, qish uchun.",
+    "price": 210000,
+    "currency": "so'm",
+    "sizes": ["S", "M", "L", "XL"],
+    "photo": "assets/kurtka-qishki.jpg"
+  }
+]
