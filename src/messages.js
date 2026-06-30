@@ -60,13 +60,15 @@ export const messages = {
   useButtons: "Iltimos, yuqoridagi tugmalardan birini tanlang.",
 
   // --- Confirmation ---
+  // Plain text (no Markdown): it embeds raw customer name/address, which could
+  // otherwise contain Markdown control chars and make Telegram reject the message.
   confirmTitle: "Buyurtmangizni tasdiqlang:",
   orderSummary: ({ item, size, qty, unitPrice, lineTotal, currency, name, phone, city, address }) =>
-    `🧾 *Buyurtma*\n` +
+    `🧾 Buyurtma\n` +
     `👕 Mahsulot: ${item}\n` +
     `📏 Hajm: ${size}   |   Soni: ${qty}\n` +
     `💰 Narx: ${formatPrice(unitPrice, currency)}` +
-    (qty > 1 ? ` × ${qty} = *${formatPrice(lineTotal, currency)}*` : "") +
+    (qty > 1 ? ` × ${qty} = ${formatPrice(lineTotal, currency)}` : "") +
     `\n👤 Mijoz: ${name}\n` +
     `📞 Tel: ${phone}\n` +
     `🏙 Shahar: ${city}\n` +
@@ -97,7 +99,11 @@ export const messages = {
     `Tez orada siz bilan bog'lanamiz.` +
     (config.shopContact ? `\n\n📞 Aloqa: ${config.shopContact}` : ""),
 
-  cancelled: "Buyurtma bekor qilindi. Katalogga qaytishingiz mumkin. 🛍",
+  cancelled: "Buyurtma bekor qilindi. ❌",
+  // Shown with the catalog button after a cancel / as a recovery nudge.
+  catalogPrompt: "Katalogni ochish uchun quyidagi tugmani bosing. 🛍",
+  // /cancel typed when there's nothing in progress.
+  noActiveOrder: "Hozir bekor qilinadigan faol buyurtma yo'q.",
 
   // --- Fallbacks / errors ---
   unknown: "Tushunmadim. Katalogni ko'rish uchun /start buyrug'ini bosing.",

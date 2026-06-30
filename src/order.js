@@ -116,8 +116,20 @@ async function showSummary(ctx) {
     address: o.address,
   });
   await ctx.reply(`${messages.confirmTitle}\n\n${summary}\n\n${messages.paymentNote}`, {
-    parse_mode: "Markdown",
     reply_markup: confirmKeyboard(),
+  });
+}
+
+// Abort the in-progress order and return the customer to the catalog. Shared by
+// the ❌ button (confirm:no) and the /cancel command. Sends the acknowledgement
+// with remove_keyboard first (clears any lingering share-contact reply keyboard
+// from the phone step), then offers the catalog on its own message — a single
+// message can't both remove a reply keyboard and carry an inline keyboard.
+export async function cancelOrder(ctx) {
+  resetSession(ctx);
+  await ctx.reply(messages.cancelled, { reply_markup: { remove_keyboard: true } });
+  await ctx.reply(messages.catalogPrompt, {
+    reply_markup: new InlineKeyboard().text(messages.btn.catalog, "catalog"),
   });
 }
 
@@ -231,9 +243,7 @@ orderFlow.callbackQuery("confirm:yes", async (ctx) => {
 orderFlow.callbackQuery("confirm:no", async (ctx) => {
   await ctx.answerCallbackQuery();
   if (ctx.session.step !== "confirm") return; // stale button — ignore quietly
-  resetSession(ctx);
-  const keyboard = new InlineKeyboard().text(messages.btn.catalog, "catalog");
-  await ctx.reply(messages.cancelled, { reply_markup: keyboard });
+  await cancelOrder(ctx);
 });
 
 // Phone via Telegram's "share contact" button (only meaningful at the phone step).
