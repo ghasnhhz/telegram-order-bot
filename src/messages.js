@@ -75,6 +75,21 @@ export const messages = {
   // Payment scaffold note shown on the confirmation screen.
   paymentNote: "💳 To'lov: yetkazib berishda kelishiladi.",
 
+  // --- Admin delivery (SPEC §3) ---
+  // The formatted order sent to ADMIN_CHAT_ID. Plain text (no Markdown): it
+  // embeds raw customer input. If qty > 1, the price line shows the line total.
+  adminOrder: ({ orderId, item, size, qty, unitPrice, lineTotal, currency, name, phone, city, address, time }) =>
+    `🆕 YANGI BUYURTMA #${orderId}\n` +
+    `👕 Mahsulot: ${item}\n` +
+    `📏 Hajm: ${size}    |   Soni: ${qty}\n` +
+    `💰 Narx: ${formatPrice(unitPrice, currency)}` +
+    (qty > 1 ? ` × ${qty} = ${formatPrice(lineTotal, currency)}` : "") +
+    `\n👤 Mijoz: ${name}\n` +
+    `📞 Tel: ${phone}\n` +
+    `🏙 Shahar: ${city}\n` +
+    `📍 Manzil: ${address}\n` +
+    `🕒 Vaqt: ${time}`,
+
   // --- After confirm ---
   thankYou: (orderId) =>
     `Rahmat! ✅ Buyurtmangiz qabul qilindi.\n` +
