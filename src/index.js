@@ -12,7 +12,7 @@ import {
   isEmpty,
   resolvePhoto,
 } from "./catalog.js";
-import { orderFlow } from "./order.js";
+import { orderFlow, cancelOrder } from "./order.js";
 
 // ---- Session shape -----------------------------------------------------------
 // One in-memory session per chat. `step` drives the order state machine
@@ -39,8 +39,25 @@ async function showWelcome(ctx) {
   });
 }
 
+// Inline keyboard with a single "open catalog" button — reused by the fallback
+// and the idle /cancel reply to keep the bot button-driven.
+function catalogButton() {
+  return new InlineKeyboard().text(messages.btn.catalog, "catalog");
+}
+
 // ---- Commands ----------------------------------------------------------------
+// Registered before the order flow so /start and /cancel always win over an
+// in-progress step instead of being captured as text input.
 bot.command("start", showWelcome);
+
+// /cancel — abort an in-progress order at any point; gentle note if nothing's active.
+bot.command("cancel", async (ctx) => {
+  if (!ctx.session.step) {
+    await ctx.reply(messages.noActiveOrder, { reply_markup: catalogButton() });
+    return;
+  }
+  await cancelOrder(ctx);
+});
 
 // ---- Catalog browse (Phase 3) ------------------------------------------------
 // Send an item as a photo card when its image exists on disk, otherwise fall
@@ -88,7 +105,7 @@ bot.callbackQuery(/^cat:(\d+)$/, async (ctx) => {
     await sendItemCard(ctx, item, caption, keyboard);
   }
   const back = new InlineKeyboard().text(messages.btn.back, "catalog");
-  await ctx.reply(messages.btn.back, { reply_markup: back });
+  await ctx.reply(messages.moreCategories, { reply_markup: back });
 });
 
 // Item detail: photo, name, description, price, size buttons, order button.
@@ -114,10 +131,18 @@ bot.callbackQuery(/^item:(.+)$/, async (ctx) => {
 // through (the composer calls next() when no order step is active).
 bot.use(orderFlow);
 
-// Gentle fallback for anything unrecognized (refined in Phase 6).
+// Gentle fallback for stray text / unknown commands outside a flow. Mid-flow text
+// is consumed by orderFlow (it only calls next() when no step is active), so by
+// the time we get here the user is idle — point them back to the catalog.
 bot.on("message:text", async (ctx) => {
-  if (ctx.session.step) return; // mid-order text is handled by order flow (later phase)
-  await ctx.reply(messages.unknown);
+  await ctx.reply(messages.unknown, { reply_markup: catalogButton() });
+});
+
+// Catch-all for stale / unknown inline buttons (e.g. tapping an old keyboard after
+// a restart): acknowledge the callback so the client stops its loading spinner.
+// Runs last, so real handlers above always take precedence.
+bot.on("callback_query", async (ctx) => {
+  await ctx.answerCallbackQuery();
 });
 
 // ---- Global error handler — never leak stack traces to users -----------------

@@ -7,7 +7,7 @@
     "price": 115000,
     "currency": "so'm",
     "sizes": ["22", "23", "24", "25", "26"],
-    "photo": "assets/tufli-qizil.jpg"
+    "photo": "assets/tufli-qizil-01.png"
   },
   {
     "id": "krossovka-bolalar-01",
@@ -17,7 +17,17 @@
     "price": 130000,
     "currency": "so'm",
     "sizes": ["27", "28", "29", "30", "31"],
-    "photo": "assets/krossovka-bolalar.jpg"
+    "photo": "assets/krossovka-bolalar-01.png"
+  },
+  {
+    "id": "sandal-yozgi-01",
+    "category": "Tufli",
+    "name": "Yozgi sandal",
+    "description": "Nafas oluvchi, issiq kunlar uchun yengil sandal.",
+    "price": 89000,
+    "currency": "so'm",
+    "sizes": ["24", "25", "26", "27", "28"],
+    "photo": "assets/sandal-yozgi-01.png"
   },
   {
     "id": "koylak-kuzgi-01",
@@ -27,7 +37,27 @@
     "price": 95000,
     "currency": "so'm",
     "sizes": ["S", "M", "L"],
-    "photo": "assets/koylak-kuzgi.jpg"
+    "photo": "assets/koylak-kuzgi-01.png"
+  },
+  {
+    "id": "koylak-bayramona-01",
+    "category": "Ko'ylak",
+    "name": "Bayramona ko'ylak",
+    "description": "Tantanali kunlar uchun chiroyli bezakli ko'ylak.",
+    "price": 145000,
+    "currency": "so'm",
+    "sizes": ["2", "4", "6", "8", "10"],
+    "photo": "assets/koylak-bayramona-01.png"
+  },
+  {
+    "id": "futbolka-paxta-01",
+    "category": "Ko'ylak",
+    "name": "Paxta futbolka",
+    "description": "Yumshoq 100% paxta, har kuni kiyish uchun qulay.",
+    "price": 55000,
+    "currency": "so'm",
+    "sizes": ["S", "M", "L", "XL"],
+    "photo": "assets/futbolka-paxta-01.png"
   },
   {
     "id": "kurtka-qishki-01",
@@ -37,6 +67,36 @@
     "price": 210000,
     "currency": "so'm",
     "sizes": ["S", "M", "L", "XL"],
-    "photo": "assets/kurtka-qishki.jpg"
+    "photo": "assets/kurtka-qishki-01.png"
+  },
+  {
+    "id": "kurtka-bahorgi-01",
+    "category": "Kurtka",
+    "name": "Bahorgi yengil kurtka",
+    "description": "Yengil va suv o'tkazmaydigan, bahor-kuz uchun.",
+    "price": 165000,
+    "currency": "so'm",
+    "sizes": ["2", "4", "6", "8"],
+    "photo": "assets/kurtka-bahorgi-01.png"
+  },
+  {
+    "id": "shim-jinsi-01",
+    "category": "Shim",
+    "name": "Bolalar jinsi shimi",
+    "description": "Mustahkam jinsi mato, kundalik kiyim uchun.",
+    "price": 99000,
+    "currency": "so'm",
+    "sizes": ["2", "4", "6", "8", "10"],
+    "photo": "assets/shim-jinsi-01.png"
+  },
+  {
+    "id": "shim-sport-01",
+    "category": "Shim",
+    "name": "Sport shimi",
+    "description": "Yumshoq va cho'ziluvchan, harakat uchun qulay.",
+    "price": 79000,
+    "currency": "so'm",
+    "sizes": ["S", "M", "L"],
+    "photo": "assets/shim-sport-01.png"
   }
 ]

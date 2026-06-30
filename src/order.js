@@ -9,6 +9,7 @@ import { Composer, InlineKeyboard, Keyboard } from "grammy";
 import { config } from "./config.js";
 import { messages } from "./messages.js";
 import { getItem } from "./catalog.js";
+import { saveOrder, sendOrderToAdmin } from "./admin.js";
 
 // ---- Pure helpers (exported for headless unit tests) -------------------------
 
@@ -76,14 +77,26 @@ async function goToCity(ctx) {
   await ctx.reply(messages.chooseCity, { reply_markup: cityKeyboard() });
 }
 
-// Build and show the order summary, then park at the confirm step.
-// Phase 5 adds the ✅/❌ buttons and admin delivery to this same screen.
+function confirmKeyboard() {
+  return new InlineKeyboard()
+    .text(messages.btn.confirm, "confirm:yes")
+    .text(messages.btn.cancel, "confirm:no");
+}
+
+// Reset to idle (browsing) and drop any in-progress order.
+function resetSession(ctx) {
+  ctx.session.step = null;
+  ctx.session.order = {};
+}
+
+// Build and show the order summary with ✅/❌ buttons, then park at the confirm
+// step. The actual delivery happens in the confirm:yes handler below.
 async function showSummary(ctx) {
   const o = ctx.session.order;
   const item = getItem(o.itemId);
   if (!item) {
     // Catalog changed under us — bail to a sane state instead of crashing.
-    ctx.session.step = null;
+    resetSession(ctx);
     await ctx.reply(messages.unknown);
     return;
   }
@@ -103,7 +116,20 @@ async function showSummary(ctx) {
     address: o.address,
   });
   await ctx.reply(`${messages.confirmTitle}\n\n${summary}\n\n${messages.paymentNote}`, {
-    parse_mode: "Markdown",
+    reply_markup: confirmKeyboard(),
+  });
+}
+
+// Abort the in-progress order and return the customer to the catalog. Shared by
+// the ❌ button (confirm:no) and the /cancel command. Sends the acknowledgement
+// with remove_keyboard first (clears any lingering share-contact reply keyboard
+// from the phone step), then offers the catalog on its own message — a single
+// message can't both remove a reply keyboard and carry an inline keyboard.
+export async function cancelOrder(ctx) {
+  resetSession(ctx);
+  await ctx.reply(messages.cancelled, { reply_markup: { remove_keyboard: true } });
+  await ctx.reply(messages.catalogPrompt, {
+    reply_markup: new InlineKeyboard().text(messages.btn.catalog, "catalog"),
   });
 }
 
@@ -173,6 +199,59 @@ orderFlow.callbackQuery(/^city:(\d+)$/, async (ctx) => {
   ctx.session.order.city = city;
   ctx.session.step = "address";
   await ctx.reply(messages.askAddress);
+});
+
+// ✅ Tasdiqlash → persist the order, deliver it to the admin, thank the customer.
+orderFlow.callbackQuery("confirm:yes", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  if (ctx.session.step !== "confirm") return; // stale button — ignore quietly
+  const o = ctx.session.order;
+  const item = getItem(o.itemId);
+  if (!item) {
+    // Catalog changed under us — bail to a sane state instead of crashing.
+    resetSession(ctx);
+    await ctx.reply(messages.unknown);
+    return;
+  }
+  const unitPrice = item.price;
+  const lineTotal = unitPrice * o.qty;
+  // Persist first (assigns orderId + timestamp), then deliver to the admin. Per
+  // SPEC §5 shape — don't invent new fields.
+  const saved = await saveOrder({
+    item: { id: item.id, name: item.name },
+    size: o.size,
+    qty: o.qty,
+    unitPrice,
+    lineTotal,
+    currency: item.currency,
+    customer: {
+      name: o.name,
+      phone: o.phone,
+      city: o.city,
+      address: o.address,
+      telegramUserId: ctx.from.id,
+    },
+  });
+  await sendOrderToAdmin(ctx.api, saved);
+
+  // ===== PAYMENT SCAFFOLD — TODO: integrate Click / Payme here =====
+  // A real shop would insert an online-payment step at this point: create a
+  // Click/Payme invoice for `saved.lineTotal`, send the customer a pay button,
+  // and only finalise once the provider confirms payment. The demo deliberately
+  // skips that — orders confirm as "to'lov yetkazib berishda kelishiladi"
+  // (payment arranged on delivery; see messages.paymentNote). Do NOT wire a real
+  // payment API here without the founder's accounts + the locked-decision sign-off.
+  // ================================================================
+
+  await ctx.reply(messages.thankYou(saved.orderId), { parse_mode: "Markdown" });
+  resetSession(ctx);
+});
+
+// ❌ Bekor qilish → abort the order, clear the session, offer the catalog again.
+orderFlow.callbackQuery("confirm:no", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  if (ctx.session.step !== "confirm") return; // stale button — ignore quietly
+  await cancelOrder(ctx);
 });
 
 // Phone via Telegram's "share contact" button (only meaningful at the phone step).
