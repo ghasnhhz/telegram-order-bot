@@ -105,7 +105,7 @@ bot.callbackQuery(/^cat:(\d+)$/, async (ctx) => {
     await sendItemCard(ctx, item, caption, keyboard);
   }
   const back = new InlineKeyboard().text(messages.btn.back, "catalog");
-  await ctx.reply(messages.btn.back, { reply_markup: back });
+  await ctx.reply(messages.moreCategories, { reply_markup: back });
 });
 
 // Item detail: photo, name, description, price, size buttons, order button.

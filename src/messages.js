@@ -34,6 +34,8 @@ export const messages = {
   chooseCategory: "Kategoriyani tanlang:",
   chooseItem: (category) => `*${category}* — mahsulotni tanlang:`,
   emptyCatalog: "Hozircha katalog bo'sh. Tez orada to'ldiriladi.",
+  // Prompt under a category's item list, alongside the back-to-categories button.
+  moreCategories: "Boshqa kategoriyalarni ko'rish uchun pastdagi tugmani bosing. 👇",
 
   // Item card (one per item in the category list): name + price.
   itemCard: ({ name, price, currency }) =>
@@ -96,7 +98,8 @@ export const messages = {
   thankYou: (orderId) =>
     `Rahmat! ✅ Buyurtmangiz qabul qilindi.\n` +
     `Buyurtma raqamingiz: *#${orderId}*\n` +
-    `Tez orada siz bilan bog'lanamiz.` +
+    `Tez orada siz bilan bog'lanamiz.\n` +
+    `💳 To'lov yetkazib berishda amalga oshiriladi.` +
     (config.shopContact ? `\n\n📞 Aloqa: ${config.shopContact}` : ""),
 
   cancelled: "Buyurtma bekor qilindi. ❌",

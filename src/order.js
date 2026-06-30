@@ -233,8 +233,16 @@ orderFlow.callbackQuery("confirm:yes", async (ctx) => {
     },
   });
   await sendOrderToAdmin(ctx.api, saved);
-  // TODO: integrate Click / Payme here (SPEC §6). For the demo, payment is
-  // "arranged on delivery" — see messages.paymentNote on the confirm screen.
+
+  // ===== PAYMENT SCAFFOLD — TODO: integrate Click / Payme here =====
+  // A real shop would insert an online-payment step at this point: create a
+  // Click/Payme invoice for `saved.lineTotal`, send the customer a pay button,
+  // and only finalise once the provider confirms payment. The demo deliberately
+  // skips that — orders confirm as "to'lov yetkazib berishda kelishiladi"
+  // (payment arranged on delivery; see messages.paymentNote). Do NOT wire a real
+  // payment API here without the founder's accounts + the locked-decision sign-off.
+  // ================================================================
+
   await ctx.reply(messages.thankYou(saved.orderId), { parse_mode: "Markdown" });
   resetSession(ctx);
 });
